@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Optimization -->
+    <title>WebReconX 🛡️ | Advanced Web Security Reconnaissance Dashboard</title>
+    <meta name="description" content="Validate security headers, analyze SSL/TLS cipher strength, discover subdomains via Certificate Transparency, fetch historical URLs, and sweep TCP ports. Deploy for free.">
+    <meta name="keywords" content="Web Reconnaissance, Cyber Security, SSL Checker, Security Headers Scanner, Subdomain Finder, Wayback Machine CDX, DNS Recon">
+    <meta name="author" content="Nithishkumar S">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="WebReconX - Web Security Reconnaissance Framework">
+    <meta property="og:description" content="Modular web security auditing platform. Perform comprehensive security scans on any domain.">
+    <meta property="og:type" content="website">
+    
+    <!-- Premium Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="cyber-theme">
+    <div class="glow-bg"></div>
+    
+    <header class="app-header">
+        <div class="logo-container">
+            <div class="logo-radar">
+                <i class="fa-solid fa-crosshairs pulse-icon"></i>
+            </div>
+            <div class="title-group">
+                <h1 id="app-main-title">WEB<span>RECON</span> X</h1>
+                <span class="sub-title">Advanced Web Security Auditing Framework</span>
+            </div>
+        </div>
+        
+        <div class="header-actions">
+            <div class="badge mode-badge" id="app-mode-badge">
+                <span class="badge-dot pulse"></span>
+                <span class="badge-text" id="app-mode-text">Connecting...</span>
+            </div>
+            <a href="https://github.com/nithish687894/WebReconX" target="_blank" class="git-link" id="header-github-link">
+                <i class="fa-brands fa-github"></i> GitHub
+            </a>
+        </div>
+    </header>
+
+    <main class="app-layout">
+        <!-- LEFT COLUMN: SCAN CONTROLS -->
+        <aside class="control-panel scroll-y">
+            <section class="card glassmorphic" id="scanner-config-card">
+                <div class="card-header">
+                    <div class="card-title-icon"><i class="fa-solid fa-sliders"></i></div>
+                    <h2>Recon Configuration</h2>
+                </div>
+                
+                <form id="scanner-config-form" onsubmit="return false;">
+                    <!-- Target Input -->
+                    <div class="form-group">
+                        <label for="target-domain">Target Domain / URL</label>
+                        <input type="text" id="target-domain" value="example.com" placeholder="example.com or https://site.com" class="custom-input" required>
+                    </div>
+
+                    <!-- Options -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="target-timeout">Timeout (seconds)</label>
+                            <input type="number" id="target-timeout" value="10" min="1" max="60" class="custom-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="target-threads">Threads</label>
+                            <input type="number" id="target-threads" value="10" min="1" max="50" class="custom-input">
+                        </div>
+                    </div>
+
+                    <!-- Module Toggles -->
+                    <div class="form-group">
+                        <label class="section-label">Scanning Modules</label>
+                        <div class="category-grid">
+                            <div class="category-item-toggle">
+                                <input type="checkbox" id="mod-headers" checked>
+                                <label for="mod-headers" title="Analyzes HTTP security headers and scores configurations">🛡️ Security Headers</label>
+                            </div>
+                            <div class="category-item-toggle">
+                                <input type="checkbox" id="mod-ssl" checked>
+                                <label for="mod-ssl" title="Validates SSL certificate expiry, TLS cipher strength and configs">🔑 SSL/TLS Analyzer</label>
+                            </div>
+                            <div class="category-item-toggle">
+                                <input type="checkbox" id="mod-tech" checked>
+                                <label for="mod-tech" title="Fingerprints frameworks, servers, CMS, CDNs">🧩 Technology Detector</label>
+                            </div>
+                            <div class="category-item-toggle">
+                                <input type="checkbox" id="mod-ports" checked>
+                                <label for="mod-ports" title="Multi-threaded scan of 29 common TCP ports with banner grabs">🔌 TCP Port Scanner</label>
+                            </div>
+                            <div class="category-item-toggle">
+                                <input type="checkbox" id="mod-dns" checked>
+                                <label for="mod-dns" title="Enumerates A, AAAA, MX, NS, TXT, CNAME, SOA records">🌐 DNS Reconnaissance</label>
+                            </div>
+                            <div class="category-item-toggle">
+                                <input type="checkbox" id="mod-subdomains" checked>
+                                <label for="mod-subdomains" title="Discovers subdomains via crt.sh and DNS dictionary sweep">🕸️ Subdomain Finder</label>
+                            </div>
+                            <div class="category-item-toggle">
+                                <input type="checkbox" id="mod-wayback" checked>
+                                <label for="mod-wayback" title="Retrieves historical archived URL paths and API endpoints">📜 Wayback Machine</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Trigger Actions -->
+                    <div class="action-buttons">
+                        <button type="button" class="btn btn-primary" id="btn-start-scan">
+                            <i class="fa-solid fa-bullseye"></i> Start Security Scan
+                        </button>
+                        <button type="button" class="btn btn-secondary hidden" id="btn-cancel-scan">
+                            <i class="fa-solid fa-stop"></i> Abort Scan
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- SUB-CARD: DEPLOYMENT GUIDE TABS -->
+            <section class="card glassmorphic" id="deployment-docs-card">
+                <div class="card-header">
+                    <div class="card-title-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                    <h2>Hosting Blueprints</h2>
+                </div>
+                <div class="card-body">
+                    <div class="tab-container">
+                        <div class="tab-headers">
+                            <button type="button" class="tab-btn active" onclick="switchDocTab(event, 'tab-vercel')">Vercel</button>
+                            <button type="button" class="tab-btn" onclick="switchDocTab(event, 'tab-render')">Render</button>
+                            <button type="button" class="tab-btn" onclick="switchDocTab(event, 'tab-github')">Pages</button>
+                        </div>
+
+                        <div class="tab-content active" id="tab-vercel">
+                                <h5>⚡ Vercel Serverless static</h5>
+                                <p>Deploy as a lightning-fast browser showcase. Zero-effort config.</p>
+                                <div class="code-box">
+                                    <pre><code>vercel</code></pre>
+                                </div>
+                        </div>
+
+                        <div class="tab-content" id="tab-render">
+                                <h5>🐍 Python FastAPI Active Scanner</h5>
+                                <p>Host on Render's **Free Tier** (`plan: free`). The included <code>render.yaml</code> deploys the FastAPI scanning backend instantly without credit cards!</p>
+                        </div>
+
+                        <div class="tab-content" id="tab-github">
+                                <h5>🌎 GitHub Pages CI/CD</h5>
+                                <p>The action workflow in <code>.github/workflows/deploy.yml</code> automatically publishes pages on push.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </aside>
+
+        <!-- RIGHT COLUMN: PROGRESS AND INTERACTIVE ASSESSMENTS -->
+        <div class="output-container scroll-y">
+            <!-- TERMINAL RECON LOGGER -->
+            <section class="card terminal-card" id="terminal-monitor-card">
+                <div class="terminal-header">
+                    <div class="terminal-controls">
+                        <span class="t-dot t-red"></span>
+                        <span class="t-dot t-yellow"></span>
+                        <span class="t-dot t-green"></span>
+                    </div>
+                    <span class="terminal-title">webreconx --logger</span>
+                    <button id="btn-clear-terminal" class="terminal-action-btn" title="Clear logs"><i class="fa-solid fa-trash-can"></i></button>
+                </div>
+                <div class="terminal-body font-mono" id="terminal-log-output">
+                    <div class="log-line system"><i class="fa-solid fa-info-circle"></i> WebReconX Auditing Console Ready.</div>
+                    <div class="log-line system"><i class="fa-solid fa-crosshairs"></i> Enter target domain and click Start to initiate comprehensive reconnaissance.</div>
+                </div>
+                <div class="terminal-progress hidden" id="terminal-progress-container">
+                    <div class="progress-bar-track">
+                        <div class="progress-bar-fill" id="terminal-progress-fill"></div>
+                    </div>
+                    <div class="progress-stats">
+                        <span id="progress-percent">0%</span>
+                        <span id="progress-step-text">Connecting to subnet...</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CORE DETAILED REPORT -->
+            <section class="card glassmorphic hidden" id="security-report-card">
+                <div class="card-header">
+                    <div class="card-title-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h2>Reconnaissance Security Assessment</h2>
+                </div>
+                <div class="card-body">
+                    <!-- Twin circular gauges -->
+                    <div class="report-overview-grid">
+                        <div class="gauge-container">
+                            <div class="radial-gauge" id="gauge-headers-container">
+                                <svg viewBox="0 0 100 100">
+                                    <circle class="gauge-bg" cx="50" cy="50" r="40"></circle>
+                                    <circle class="gauge-fill" id="gauge-headers-fill" cx="50" cy="50" r="40" stroke-dasharray="251" stroke-dashoffset="251"></circle>
+                                </svg>
+                                <div class="gauge-center">
+                                    <span class="risk-grade" id="headers-grade-label">F</span>
+                                    <span class="risk-score" id="headers-score-label">—</span>
+                                </div>
+                            </div>
+                            <span class="widget-label">Security Headers</span>
+                        </div>
+
+                        <div class="gauge-container">
+                            <div class="radial-gauge" id="gauge-ssl-container">
+                                <svg viewBox="0 0 100 100">
+                                    <circle class="gauge-bg" cx="50" cy="50" r="40"></circle>
+                                    <circle class="gauge-fill" id="gauge-ssl-fill" cx="50" cy="50" r="40" stroke-dasharray="251" stroke-dashoffset="251"></circle>
+                                </svg>
+                                <div class="gauge-center">
+                                    <span class="risk-grade" id="ssl-grade-label">F</span>
+                                    <span class="risk-score" id="ssl-score-label">—</span>
+                                </div>
+                            </div>
+                            <span class="widget-label">SSL/TLS Certificate</span>
+                        </div>
+
+                        <div class="metrics-column">
+                            <div class="metrics-mini-grid">
+                                <div class="metric-mini-card">
+                                    <span class="m-val" id="metric-duration">0.0s</span>
+                                    <span class="m-lbl">Scan Duration</span>
+                                </div>
+                                <div class="metric-mini-card">
+                                    <span class="m-val alert-critical" id="metric-ports">0</span>
+                                    <span class="m-lbl">Open Ports</span>
+                                </div>
+                                <div class="metric-mini-card">
+                                    <span class="m-val text-primary" id="metric-subdomains">0</span>
+                                    <span class="m-lbl">Subdomains Found</span>
+                                </div>
+                                <div class="metric-mini-card">
+                                    <span class="m-val" id="metric-urls">0</span>
+                                    <span class="m-lbl">Archived Paths</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Datagrid Tabs -->
+                    <div class="recon-tabs-container margin-top-lg">
+                        <div class="tab-headers border-bottom">
+                            <button type="button" class="tab-btn active" onclick="switchReconTab(event, 'tab-headers-data')">🛡️ Headers</button>
+                            <button type="button" class="tab-btn" onclick="switchReconTab(event, 'tab-ssl-data')">🔑 SSL Certificate</button>
+                            <button type="button" class="tab-btn" onclick="switchReconTab(event, 'tab-tech-data')">🧩 Tech Detector</button>
+                            <button type="button" class="tab-btn" onclick="switchReconTab(event, 'tab-dns-data')">🌐 DNS Recon</button>
+                            <button type="button" class="tab-btn" onclick="switchReconTab(event, 'tab-subdomains-data')">🕸️ Subdomains</button>
+                            <button type="button" class="tab-btn" onclick="switchReconTab(event, 'tab-ports-data')">🔌 TCP Ports</button>
+                            <button type="button" class="tab-btn" onclick="switchReconTab(event, 'tab-wayback-data')">📜 Wayback Machine</button>
+                        </div>
+
+                        <!-- Tab 1: Headers -->
+                        <div class="tab-content active" id="tab-headers-data">
+                            <div class="table-responsive">
+                                <table id="table-headers">
+                                    <thead><tr><th>Header Name</th><th>Status</th><th>Severity</th><th>Description</th></tr></thead>
+                                    <tbody><!-- Dynamic --></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Tab 2: SSL -->
+                        <div class="tab-content" id="tab-ssl-data">
+                            <div class="table-responsive">
+                                <table id="table-ssl">
+                                    <thead><tr><th>Certificate Property</th><th>Value / Configuration</th><th>Status</th></tr></thead>
+                                    <tbody><!-- Dynamic --></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Tab 3: Tech -->
+                        <div class="tab-content" id="tab-tech-data">
+                            <div class="tech-grid" id="tech-badge-container">
+                                <!-- Tech Badges injected dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Tab 4: DNS -->
+                        <div class="tab-content" id="tab-dns-data">
+                            <div class="table-responsive">
+                                <table id="table-dns">
+                                    <thead><tr><th>Record Type</th><th>Content Value</th><th>TTL</th></tr></thead>
+                                    <tbody><!-- Dynamic --></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Tab 5: Subdomains -->
+                        <div class="tab-content" id="tab-subdomains-data">
+                            <div class="table-responsive">
+                                <table id="table-subdomains">
+                                    <thead><tr><th>Subdomain</th><th>Resolved IP</th><th>Discovery Source</th></tr></thead>
+                                    <tbody><!-- Dynamic --></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Tab 6: Ports -->
+                        <div class="tab-content" id="tab-ports-data">
+                            <div class="table-responsive">
+                                <table id="table-ports">
+                                    <thead><tr><th>Port Number</th><th>Service</th><th>Banner / Handshake</th><th>Risk Warning</th></tr></thead>
+                                    <tbody><!-- Dynamic --></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Tab 7: Wayback -->
+                        <div class="tab-content" id="tab-wayback-data">
+                            <div class="table-responsive">
+                                <table id="table-wayback">
+                                    <thead><tr><th>File/Path Category</th><th>Archived Endpoint URL</th></tr></thead>
+                                    <tbody><!-- Dynamic --></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <p>&copy; 2026 WebReconX Advanced Security Reconnaissance Framework. Audited for authorized auditing and educational penetration testing.</p>
+    </footer>
+
+    <!-- Frontend Core logic -->
+    <script src="app.js"></script>
+</body>
+</html>

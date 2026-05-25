@@ -32,12 +32,25 @@ WebReconX performs comprehensive security reconnaissance with these built-in mod
 ### Key Highlights
 
 - **Zero external dependencies** for core scanning (only `requests` library needed)
-- **Raw DNS implementation** - custom DNS query builder and parser (no dnspython needed)
+- **Raw DNS implementation** - custom DNS query builder and parser (no `dnspython` needed)
 - **Multi-threaded scanning** for ports and subdomains
 - **Security scoring** with letter grades for headers and SSL
 - **JSON report export** for integration with other tools
 - **Professional terminal UI** with color-coded severity levels
 - **Modular architecture** - easily extendable with new modules
+- **Premium Glassmorphic Web Dashboard** - a state-of-the-art SOC-style interface featuring live circular risk gauges, search tables, custom threads/timeouts, and dynamic progress logger consoles.
+
+---
+
+## ⚡ Premium Web Dashboard
+
+WebReconX now comes equipped with an ultra-premium, responsive, **glassmorphic security auditing dashboard** designed in a cyber dark-slate theme:
+
+- **Dual-Mode System**:
+  1. **Sandbox Showcase (Client-side)**: Runs fully serverless in the browser, simulating high-fidelity scans on any domain. Deployable instantly for **free** on **Vercel** or **GitHub Pages**.
+  2. **Active Full-Stack Scanner (FastAPI)**: Integrates directly with the Python scanning engine to run real active scans over public HTTP/DNS/SSL registers. Hostable for **free** on **Render**.
+- **Interactive Radial Gauges**: Real-time calculated security ratings (A+ through F) with SVG stroke tracking.
+- **Searchable Recon Datagrids**: Clean tabular tabs for all 7 reconnaissance pipelines.
 
 ---
 
@@ -95,6 +108,45 @@ python webreconx.py --list-modules
 ```bash
 python webreconx.py -h
 ```
+
+---
+
+## 🖥️ Running & Deploying the Web Dashboard
+
+### Local Execution (FastAPI active scan server)
+Start the lightweight web API wrapper on your local machine to trigger live interactive scans directly from the browser:
+
+```bash
+# Start the FastAPI uvicorn daemon
+python web/server.py
+```
+Open your browser of choice and direct it to **`http://localhost:8000`** to experience the premium cybersecurity operations console.
+
+---
+
+### Cloud Hosting Blueprints
+
+#### 1. Live Active Scans on Render (Recommended)
+This repository includes a `render.yaml` specification designed to run seamlessly on the **Render Free tier (`plan: free`)**, skipping any credit card validation blockades:
+- Register/Login on [Render.com](https://render.com).
+- Click **New** in the top right > **Blueprint**.
+- Connect your `WebReconX` GitHub repository.
+- Name the deployment and click **Approve/Deploy**. Render will automatically detect the blueprints, build python, install packages, and deploy the FastAPI daemon.
+
+#### 2. Vercel Static Showcase (Serverless)
+Deploy the visual sandbox as a client-side showcase:
+```bash
+# Using Vercel CLI (zero config)
+vercel
+```
+Vercel reads the root `vercel.json` routing configuration and instantly hosts the serverless dashboard on Vercel's Edge network.
+
+#### 3. GitHub Pages CI/CD
+We've bundled an automated GitHub Actions deployment workflow at `.github/workflows/deploy.yml`:
+- Navigate to your repository settings on GitHub.
+- Go to **Settings** > **Pages**.
+- Change the Source to **GitHub Actions**.
+- On every git push to your `main` branch, the workflow compiles and hosts the showcase dashboard at `https://<your-username>.github.io/WebReconX/` automatically.
 
 ---
 
